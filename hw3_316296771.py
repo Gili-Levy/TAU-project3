@@ -9,44 +9,65 @@
 
 # Enter all IDs of participating students as strings, separated by commas.
 # For example: SUBMISSION_IDS = ["123456", "987654"] if submitted in a pair or SUBMISSION_IDS = ["123456"] if submitted alone.
+import math
 SUBMISSION_IDS = ["316296771"]
 
 # Q2 - A
 
-
 def hex_to_float(s):
 	if s == "0"*16:  # zero
 		return 0
+
+	sgn = (-1)**int(s[0])
+	print (sgn)
+
+	exp = int(s[1:4], 16)
+	print (exp)
+
+	fraction = int(s[4:17], 16)
+	print (fraction)
 	
-	trans = {"0": 0, "1": 1, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7,
-			 "8": 8, "9": 9, "a": 10, "b": 11, "c": 12, "d": 13, "e": 14, "f": 15}
-	s1 = s[1:4]  # exp
-	s2 = s[4:]  # freq
+	return (-1)**(sgn) * 16**(exp-2047) * fraction * 16**(-11)
 
-	#sign
-	num = (-1)**int(s[0])
 
-	#exp
-	exp = 0
-	for i in range (3):
-		exp += trans[s1[i]]*(16**(2-i))
-	
-	num *= 16**(exp-2047)
 
-	#freg
-	fraction = 0
-	for i in range (12):
-		fraction += trans[s2[i]]*(16**(11-i))
-
-	num *= fraction * (16**(-11))
-	
-	return num
-
+"""
+def left_fill_zeros(bin_str, output_len): # Pad with zeros on the left side
+	return '0' * (output_len - len(bin_str)) + bin_str
 
 
 # Q2 - B
 def float_to_hex(num):
-	pass  # replace this with your code
+	print ("num: ", num)
+	if num == 0: # zero
+		return "0"*16
+	#num= num/(16**-11)
+	sgn = "0"
+	if num < 0: # negative
+		sgn = "1"
+		num = abs(num)
+	print (sgn)
+	
+	# Compute shift
+	shift = math.floor(math.log(num,16.0))
+	bexp = hex(shift + 2047)[2:]
+	bexp = left_fill_zeros(bexp, 3)
+
+	num = num * (16**-shift)  # Shift the number
+	print (num)
+	num -= 1  # num has form 1.xxx, we want the xxx part ???????? not bin
+
+	# Compute mantissa
+	num = int(num * (16**12))
+	bfraction = hex(num)[2:]
+	bfraction = left_fill_zeros(bfraction, 12)
+
+	return sgn + bexp + bfraction
+
+
+print(float_to_hex(10 * 16**2 + 7 * 16 + 11/16 + 3/16**2))
+
+"""
 
 
 # Q3 - A
@@ -59,12 +80,69 @@ def search_combined(lst, key):
 
 
 def modified_binary_search(lst, key, search_even):
-	pass  # replace this with your code
+	n = len(lst)
+
+	odd = 0
+	if search_even == False:
+		odd = 1
+	left = 0 + odd
+	right = n-2 + odd
+	
+	while left <= right: # binary search
+		
+		if ((left+right)//2 % 2 == 0) == search_even:  # middle rounded down
+			mid = (left+right)//2
+		else:
+			mid = (left+right)//2 + 1
+			
+		if key == lst[mid]:	  # item found
+			return mid
+		elif key < lst[mid]:	 # item cannot be in top half
+			right = mid-2
+		else:					# item cannot be in bottom half
+			left = mid+2
+		
+	return None
+
 
 
 # Q3 - B
 def sort_combined(lst):
-	pass  # replace this with your code
+	ev_lst = []
+	od_lst= []
+	for i in range (len(lst)): # complexity = O(n)
+		if i%2 == 0:
+			ev_lst.append(lst[i])
+		else:
+			od_lst.append(lst[i])
+	od_lst.reverse() # complexity O(n/2) -> O(n)
+	
+	n = len(ev_lst)
+	m = len(od_lst)
+	res = [0 for i in range(n+m)]  # complexity = O(n)
+
+	a=0 ; b=0 ; c=0
+	while  a < n  and  b < m: # A & B have elements
+		if ev_lst[a] < od_lst[b]:
+			res[c] = ev_lst[a]
+			a += 1
+		else:
+			res[c] = od_lst[b]
+			b += 1
+		c += 1
+
+	if a == n: #A was completed
+		while b < m:
+			res[c] = od_lst[b]
+			b += 1
+			c += 1
+	else: #B was completed
+		while a < n:
+			res[c] = ev_lst[a]
+			a += 1
+			c += 1
+		
+	return res
 
 
 # Q3 - C

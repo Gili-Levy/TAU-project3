@@ -19,55 +19,34 @@ def hex_to_float(s):
 		return 0
 
 	sgn = (-1)**int(s[0])
-	print (sgn)
 
 	exp = int(s[1:4], 16)
-	print (exp)
 
-	fraction = int(s[4:17], 16)
-	print (fraction)
+	fraction = int(s[4:], 16)
 	
 	return (-1)**(sgn) * 16**(exp-2047) * fraction * 16**(-11)
 
 
-
-"""
-def left_fill_zeros(bin_str, output_len): # Pad with zeros on the left side
-	return '0' * (output_len - len(bin_str)) + bin_str
-
-
 # Q2 - B
 def float_to_hex(num):
-	print ("num: ", num)
 	if num == 0: # zero
 		return "0"*16
-	#num= num/(16**-11)
+
 	sgn = "0"
 	if num < 0: # negative
 		sgn = "1"
 		num = abs(num)
-	print (sgn)
 	
 	# Compute shift
-	shift = math.floor(math.log(num,16.0))
+	shift = math.floor(math.log(num,16))
 	bexp = hex(shift + 2047)[2:]
-	bexp = left_fill_zeros(bexp, 3)
+	bexp = "0"*(3-len(bexp)) + bexp
 
 	num = num * (16**-shift)  # Shift the number
-	print (num)
-	num -= 1  # num has form 1.xxx, we want the xxx part ???????? not bin
-
-	# Compute mantissa
-	num = int(num * (16**12))
-	bfraction = hex(num)[2:]
-	bfraction = left_fill_zeros(bfraction, 12)
+	num = num * (16**11)
+	bfraction = hex(int(num))[2:]
 
 	return sgn + bexp + bfraction
-
-
-print(float_to_hex(10 * 16**2 + 7 * 16 + 11/16 + 3/16**2))
-
-"""
 
 
 # Q3 - A
@@ -147,17 +126,66 @@ def sort_combined(lst):
 
 # Q3 - C
 def find_duplicate(lst):
-	pass  # replace this with your code
+	left = 0
+	right = len(lst) - 2
+	
+	while left <= right: #kind-of binary search
+		
+		if (left+right)//2 % 2 == 0: #set mid as even num in the middle
+			mid = (left+right)//2
+		else:
+			mid = (left+right)//2 + 1
+		
+		print("left: ", left, "right: ", right, "mid: ", mid)
+		if lst[mid] == lst[mid+1]:	# item found
+			return mid
+		elif lst[mid] > lst[mid+1]:	#item cannot be in top half
+			print ("term1")
+			right = mid - 2
+		elif lst[mid] < lst[mid+1]:	# item cannot be in bottom half
+			left = mid + 2
+			print("term2")
+
+	return None  
+
+#help
+#print(find_duplicate([100, 250, 200, 210, 210, -300, 400, -400, 500, -500]))
 
 
 # Q4 - A, a
 def find(lst, s):
-	pass  # replace this with your code
+	n=len(lst) # complexity = O(1)
+	left = 0 # complexity = O(1)
+	right = n-1 # complexity = O(1)
+
+	while (right-left) >= 4: #kind-of binary search. complexity = O(log(n))
+		mid = (left+right)//2
+		if lst[mid] == s:
+			return mid
+		elif s > lst[mid]:
+			left = mid - 1
+		elif s < lst[mid]:
+			right = mid + 1
+
+	lst2 = lst[left:right+1] # complexity = O(1) -> doesn't depend on k. always slices 4 elements from the list.
+	for i in range(4):
+		if lst2[i] == s:
+			return left + i
+	
+	return None
 
 
 # Q4 - A, b
 def sort_from_almost(lst):
-	pass  # replace this with your code
+	for i in range (len(lst)-1): # complexity = O(n)
+		if lst[i] <= lst[i+1]: # if the pair is already sorted
+			continue
+		else: # swap
+			tmp = lst[i] # complexity = O(1). memory complex = O(1)
+			lst[i] = lst[i+1]  # complexity = O(1)
+			lst[i+1] = tmp  # complexity = O(1)
+	
+	return None
 
 
 # Q4 - B

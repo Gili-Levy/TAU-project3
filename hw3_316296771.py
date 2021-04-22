@@ -190,18 +190,37 @@ def sort_from_almost(lst):
 
 # Q4 - B
 def find_local_min(lst):
-	pass  # replace this with your code
+	if lst[0] <= lst[1]:  #checking the first pair. complexity = O(1)
+		return 0
+	if lst[len(lst)-1]<= lst[len(lst)-2]: #checking the last pair. complexity = O(1)
+		return len(lst)-1
+	
+	for i in range(1, len(lst)-1):  #checking each three-elements. complexity = O(n)
+		if 	(lst[i] <= lst [i-1]) and (lst[i]<= lst[i+1]):
+			return i
+	
+	return None
 
 
 # Q5 - a
 def string_to_int(s):
-	pass  # replace this with your code
-
+	dct = {"a":0, "b":1, "c":2, "d":3, "e":4}
+	num = 0
+	for i in range (len(s)):
+		num += dct[s[i]]*(5**i)
+	return num
 
 # Q5 - b
-def int_to_string(k, n):
-	pass  # replace this with your code
-
+def int_to_string(k, n): #n is the num(<=5^k-1), k is the output length(>0)
+	dct = {0: "a", 1: "b", 2: "c", 3: "d", 4: "e"}
+	st = ""  
+	
+	for i in range (k): # complexity = O(k)
+		pwr = 5**(k-1-i)  # 5 degree in index k-i
+		num = n // pwr  # num time pwr
+		st += dct[num]  # num time pwr -> letter
+		n = n - pwr*num  # decrease the original n
+	return st[::-1]
 
 # Q5 - c
 def sort_strings1(lst, k):

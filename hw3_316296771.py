@@ -24,11 +24,9 @@ def hex_to_float(s):
 
 	fraction = int(s[4:], 16)
 	
-	return (-1)**(sgn) * 16**(exp-2047) * fraction * 16**(-11)
+	return (sgn) * 16**(exp-2047) * fraction * 16**(-11)
 
 
-#help
-#print(hex_to_float("1fff200000000000"))
 
 # Q2 - B
 def float_to_hex(num):
@@ -142,14 +140,12 @@ def find_duplicate(lst):
 		if lst[mid] == lst[mid+1]:	# item found
 			return mid
 		elif lst[mid] > lst[mid+1]:	#item cannot be in top half
-			print ("term1")
 			right = mid - 2
 		elif lst[mid] < lst[mid+1]:	# item cannot be in bottom half
 			left = mid + 2
-			print("term2")
 
 	return None
-
+#help
 
 # Q4 - A, a
 def find(lst, s):
@@ -184,8 +180,7 @@ def sort_from_almost(lst):
 			lst[i] = lst[i+1]  # complexity = O(1)
 			lst[i+1] = tmp  # complexity = O(1)
 	
-	return None
-
+	return lst
 
 # Q4 - B
 def find_local_min(lst):
@@ -194,12 +189,20 @@ def find_local_min(lst):
 	if lst[len(lst)-1]<= lst[len(lst)-2]: #checking the last pair. complexity = O(1)
 		return len(lst)-1
 	
-	for i in range(1, len(lst)-1):  #checking each three-elements. complexity = O(n)
-		if 	(lst[i] <= lst [i-1]) and (lst[i]<= lst[i+1]):
-			return i
-	
+	n = len(lst)
+	left = 0
+	right = n-1
+	while left<=right: #kind-of binary search
+		mid = (right+left)//2
+		if (lst[mid] <= lst[mid+1]) and (lst[mid] <= lst[mid-1]): #checking if lst[mid] is local min point
+			return lst[mid]
+		elif lst[mid] > lst[mid-1]:  # item will be in bottom half
+			right = mid - 1
+		else:  # item will be in top half
+			left = mid + 1
+
 	return None
-#help - complexity is log(n)
+
 
 # Q5 - a
 def string_to_int(s):
@@ -377,3 +380,6 @@ def test():
 	s = ''.join(random.choices('0123456789abcdefghijklmnopqrstuvwxyz', k=50))
 	if decode(code(s)) != s:
 		print("error in code and/or decode")
+
+
+test()

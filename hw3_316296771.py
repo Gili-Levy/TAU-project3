@@ -27,6 +27,9 @@ def hex_to_float(s):
 	return (-1)**(sgn) * 16**(exp-2047) * fraction * 16**(-11)
 
 
+#help
+#print(hex_to_float("1fff200000000000"))
+
 # Q2 - B
 def float_to_hex(num):
 	if num == 0: # zero
@@ -136,7 +139,6 @@ def find_duplicate(lst):
 		else:
 			mid = (left+right)//2 + 1
 		
-		print("left: ", left, "right: ", right, "mid: ", mid)
 		if lst[mid] == lst[mid+1]:	# item found
 			return mid
 		elif lst[mid] > lst[mid+1]:	#item cannot be in top half
@@ -146,10 +148,7 @@ def find_duplicate(lst):
 			left = mid + 2
 			print("term2")
 
-	return None  
-
-#help
-print(find_duplicate([100, 250, 200, 210, 210, -300, 400, -400, 500, -500]))
+	return None
 
 
 # Q4 - A, a
@@ -200,7 +199,7 @@ def find_local_min(lst):
 			return i
 	
 	return None
-
+#help - complexity is log(n)
 
 # Q5 - a
 def string_to_int(s):
@@ -260,12 +259,36 @@ def sort_strings2(lst, k):
 
 # Q6 - A
 def code(string):
-	pass  # replace this with your code
+	numbers = ["0","1","2","3","4","5","6","7","8","9"]
+	letters = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"]
 
+	res = ""
+	for note in string:
+		if note in numbers:
+			cur_bin = bin(int(note))[2:] #note -> binary form
+			res += "0" + cur_bin.zfill(4)  # form and pad qith zeros
+		elif note in letters:
+			cur_bin = bin(letters.index(note))[2:]  #note index -> binary form
+			res += "1" + cur_bin.zfill(5)  # form and pad qith zeros
+	
+	return res
 
 # Q6 - B
 def decode(bin_str):
-	pass  # replace this with your code
+	letters = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"]
+	res = ""
+
+	while len(bin_str) > 0:
+		if bin_str[0] == "0": # checks if integer
+			cur_val = int(bin_str[1:5],2) # int value
+			res += str(cur_val) # add int as str
+			bin_str = bin_str[5:] # slice the org str
+		elif bin_str[0] == "1": # checks if letter
+			cur_val = int(bin_str[1:6],2) # letter index
+			res += letters[cur_val] # add letter from list
+			bin_str = bin_str[6:] # slice the org str
+	
+	return res
 
 
 ########

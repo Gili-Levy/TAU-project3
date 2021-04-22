@@ -149,7 +149,7 @@ def find_duplicate(lst):
 	return None  
 
 #help
-#print(find_duplicate([100, 250, 200, 210, 210, -300, 400, -400, 500, -500]))
+print(find_duplicate([100, 250, 200, 210, 210, -300, 400, -400, 500, -500]))
 
 
 # Q4 - A, a
@@ -206,8 +206,9 @@ def find_local_min(lst):
 def string_to_int(s):
 	dct = {"a":0, "b":1, "c":2, "d":3, "e":4}
 	num = 0
-	for i in range (len(s)):
-		num += dct[s[i]]*(5**i)
+	k=len(s)
+	for i in range (k):
+		num += dct[s[i]]*(5**(k-1-i))
 	return num
 
 # Q5 - b
@@ -220,16 +221,41 @@ def int_to_string(k, n): #n is the num(<=5^k-1), k is the output length(>0)
 		num = n // pwr  # num time pwr
 		st += dct[num]  # num time pwr -> letter
 		n = n - pwr*num  # decrease the original n
-	return st[::-1]
+	return st
+
 
 # Q5 - c
 def sort_strings1(lst, k):
-	pass  # replace this with your code
+	helper = [0] * (5**k) #complexity = o(5^k)
+	
+	#turn lst values to int
+	res = []
+	for string in lst: # complexity = O(n)
+		res.append(string_to_int(string)) #complexity = O(k)
+	
+	# "sort"
+	for index in res: #complexity = O(n)
+		helper[index] += 1
+	
+	res = []
+	for i in range (5**k): # 5^k
+		for amount in range (helper[i]):
+			value = int_to_string(k, i)
+			res.append(value)
+	
+	return res
 
 
 # Q5 - e
 def sort_strings2(lst, k):
-	pass  # replace this with your code
+	res =[]
+	
+	for i in range (5**k):
+		for item in lst:
+			if string_to_int(item) == i:
+				res.append(item)
+
+	return res
 
 
 # Q6 - A

@@ -145,7 +145,7 @@ def find_duplicate(lst):
 			left = mid + 2
 
 	return None
-#help
+
 
 # Q4 - A, a
 def find(lst, s):
@@ -382,4 +382,3 @@ def test():
 		print("error in code and/or decode")
 
 
-test()
